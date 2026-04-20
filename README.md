@@ -1,1 +1,0 @@
- Déploiement automatisé avec Ansible
