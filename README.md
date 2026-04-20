@@ -2,7 +2,7 @@
 
 Ce projet consiste à automatiser l'installation, la configuration et la mise à jour d'un serveur web Apache sur une infrastructure virtuelle. L'objectif est de garantir un déploiement fiable et esthétique tout en utilisant les meilleures pratiques DevOps comme le **Rolling Deployment**.
 
-## 🚀 Fonctionnalités du Projet
+##  1-Fonctionnalités du Projet
 - **Installation Automatisée** : Déploiement du serveur Apache2 via un Playbook Ansible.
 - **Gestion d'Inventaire** : Utilisation d'un fichier `inventory.ini` pour cibler dynamiquement les serveurs.
 - **Interface Web Esthétique** : Déploiement d'une page `index.html` moderne (CSS3) avec support complet des accents (UTF-8).
@@ -10,7 +10,7 @@ Ce projet consiste à automatiser l'installation, la configuration et la mise à
 
 ---
 
-## 👥 Membres du Groupe et Répartition des Tâches
+## 2- Membres du Groupe et Répartition des Tâches
 
 Conformément aux objectifs du projet, les responsabilités ont été réparties entre les 4 membres de l'équipe :
 
@@ -23,32 +23,32 @@ Conformément aux objectifs du projet, les responsabilités ont été réparties
 
 ---
 
-## 📋 Documentation des Étapes de Réalisation
+## 3- Documentation des Étapes de Réalisation
 
 Le projet a été mené à bien en suivant ces étapes détaillées :
 
-### 1. Préparation de l'Infrastructure
+### 3-1. Préparation de l'Infrastructure
 - Création du répertoire de travail et initialisation de Git.
 - Configuration du fichier `inventory.ini` avec l'adresse IP de la machine cible (`10.0.2.15`).
 - Validation de la communication entre le nœud maître et le nœud géré via la commande `ansible ping`.
 
-### 2. Développement du Playbook
+### 3-2. Développement du Playbook
 - Rédaction des tâches pour l'installation du paquet `apache2`.
 - Utilisation de la directive `become: yes` pour obtenir les droits root nécessaires à l'installation.
 - Configuration du service pour qu'il soit démarré et activé au boot.
 
-### 3. Création et Déploiement du Contenu
+### 3-3. Création et Déploiement du Contenu
 - Conception d'une page web esthétique avec CSS intégré.
 - **Correction des accents** : Utilisation de `<meta charset="UTF-8">` pour assurer un affichage parfait des caractères spéciaux.
 - Automatisation du transfert du fichier vers `/var/www/html/` via le module `copy`.
 
-### 4. Rolling Deployment & Finalisation
+### 3-4. Rolling Deployment & Finalisation
 - Ajout de `serial: 1` dans le playbook pour simuler une mise à jour progressive.
 - Versionnage final du code et export du projet vers le dépôt distant GitHub.
 
 ---
 
-## 🛠️ Guide d'Utilisation
+## 4-Guide d'Utilisation
 
 Pour déployer la solution sur votre propre infrastructure :
 
