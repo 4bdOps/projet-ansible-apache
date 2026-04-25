@@ -1,0 +1,8 @@
+---
+# ============================================================
+#  Variables spécifiques à web2
+# ============================================================
+
+server_color: "purple"
+server_ip_public: "192.168.56.101"
+server_description: "Serveur Web Numéro 2"

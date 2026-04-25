@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ inventory_hostname | upper }} — Ansible</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+{% if server_color == 'blue' %}
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+{% else %}
+      background: linear-gradient(135deg, #1a0533 0%, #2d1b69 50%, #11998e 100%);
+{% endif %}
+      color: white;
+    }
+    .card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px;
+      padding: 50px 60px;
+      max-width: 600px;
+      width: 92%;
+      text-align: center;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+    }
+    .server-badge {
+      font-size: 4rem;
+      font-weight: 800;
+      letter-spacing: 4px;
+      margin-bottom: 6px;
+{% if server_color == 'blue' %}
+      color: #4fc3f7;
+{% else %}
+      color: #ce93d8;
+{% endif %}
+    }
+    .tag {
+      display: inline-block;
+      padding: 5px 18px;
+      border-radius: 50px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+{% if server_color == 'blue' %}
+      background: rgba(79,195,247,0.15);
+      border: 1px solid rgba(79,195,247,0.4);
+      color: #4fc3f7;
+{% else %}
+      background: rgba(206,147,216,0.15);
+      border: 1px solid rgba(206,147,216,0.4);
+      color: #ce93d8;
+{% endif %}
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.88);
+      margin-bottom: 10px;
+    }
+    .desc {
+      color: rgba(255,255,255,0.45);
+      font-size: 13px;
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .box .lbl {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 5px;
+    }
+    .box .val {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.82);
+    }
+    .rolling-banner {
+      background: rgba(255,193,7,0.1);
+      border: 1px solid rgba(255,193,7,0.3);
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 12px;
+      color: #ffd54f;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #4ade80;
+      padding: 10px 26px;
+      border-radius: 50px;
+      font-size: 13px;
+    }
+    .dot {
+      width: 7px; height: 7px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform: scale(1); }
+      50% { opacity:0.4; transform: scale(0.8); }
+    }
+    footer {
+      margin-top: 26px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <div class="server-badge">{{ inventory_hostname | upper }}</div>
+    <div class="tag">🚀 Rolling Deployment — Ansible</div>
+
+    <h1>{{ server_description }}</h1>
+    <p class="desc">
+      Déployé automatiquement par <strong>Ansible</strong><br/>
+      Stratégie : <strong>Rolling Deployment</strong> (serial: 1)<br/>
+      Serveur web : <strong>Apache2</strong> sur Ubuntu
+    </p>
+
+    <div class="rolling-banner">
+      🔁 Rolling Deployment actif — les serveurs sont mis à jour<br/>
+      <strong>un par un</strong> pour garantir zéro interruption de service
+    </div>
+
+    <div class="grid">
+      <div class="box">
+        <div class="lbl">Hostname</div>
+        <div class="val">{{ inventory_hostname }}</div>
+      </div>
+      <div class="box">
+        <div class="lbl">IP Interne</div>
+        <div class="val">{{ ansible_host }}</div>
+      </div>
+      <div class="box">
+        <div class="lbl">IP Publique</div>
+        <div class="val">{{ server_ip_public }}</div>
+      </div>
+      <div class="box">
+        <div class="lbl">Outil</div>
+        <div class="val">Ansible</div>
+      </div>
+      <div class="box">
+        <div class="lbl">Serveur Web</div>
+        <div class="val">Apache2</div>
+      </div>
+      <div class="box">
+        <div class="lbl">OS</div>
+        <div class="val">Ubuntu</div>
+      </div>
+    </div>
+
+    <div class="status">
+      <div class="dot"></div>
+      Serveur opérationnel
+    </div>
+
+    <footer>{{ projet_nom }}</footer>
+  </div>
+</body>
+</html>

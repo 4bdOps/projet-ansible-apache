@@ -1,0 +1,14 @@
+---
+# ============================================================
+#  Variables globales — s'appliquent à TOUTES les machines
+# ============================================================
+
+# Apache
+apache_package: apache2
+apache_service: apache2
+apache_port: 80
+apache_webroot: /var/www/html
+
+# Site web
+site_title: "Mon Site Ansible"
+projet_nom: "Déploiement automatisé avec Ansible"

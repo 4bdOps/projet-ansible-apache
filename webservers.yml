@@ -1,0 +1,8 @@
+---
+# ============================================================
+#  Variables spécifiques au groupe [webservers]
+# ============================================================
+
+apache_state: present
+apache_enabled: yes
+ufw_allow_http: yes

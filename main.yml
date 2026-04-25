@@ -1,0 +1,9 @@
+---
+# ============================================================
+#  HANDLERS — Déclenchés uniquement si une tâche change
+# ============================================================
+
+- name: Redemarrer Apache
+  service:
+    name: "{{ apache_service }}"
+    state: restarted

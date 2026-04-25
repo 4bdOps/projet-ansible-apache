@@ -1,0 +1,8 @@
+---
+# ============================================================
+#  Variables spécifiques à web1
+# ============================================================
+
+server_color: "blue"
+server_ip_public: "192.168.56.102"
+server_description: "Serveur Web Numéro 1"
