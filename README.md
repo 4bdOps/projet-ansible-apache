@@ -1,59 +1,104 @@
-# Projet 6 : Déploiement Automatisé et Rolling Deployment avec Ansible
+# 🚀 Déploiement Automatisé avec Ansible
 
-Ce projet consiste à automatiser l'installation, la configuration et la mise à jour d'un serveur web Apache sur une infrastructure virtuelle. L'objectif est de garantir un déploiement fiable et esthétique tout en utilisant les meilleures pratiques DevOps comme le **Rolling Deployment**.
-
-##  1-Fonctionnalités du Projet
-- **Installation Automatisée** : Déploiement du serveur Apache2 via un Playbook Ansible.
-- **Gestion d'Inventaire** : Utilisation d'un fichier `inventory.ini` pour cibler dynamiquement les serveurs.
-- **Interface Web Esthétique** : Déploiement d'une page `index.html` moderne (CSS3) avec support complet des accents (UTF-8).
-- **Continuité de Service** : Mise en œuvre d'une stratégie de "Rolling Update" via la directive `serial`.
+> Projet DevOps — Installation automatique Apache + Rolling Deployment sur 3 VMs Ubuntu (VirtualBox)
 
 ---
 
-## 2- Membres du Groupe et Répartition des Tâches
+## 🏗️ Architecture
 
-Conformément aux objectifs du projet, les responsabilités ont été réparties entre les 4 membres de l'équipe :
+```
+┌─────────────────────────────────────────────────────────┐
+│                      VirtualBox                         │
+│                                                         │
+│   ┌──────────────────┐                                  │
+│   │   CONTRÔLEUR     │  SSH → web1 (10.0.0.1)          │
+│   │   10.0.0.3       │  SSH → web2 (10.0.0.2)          │
+│   │   (Ansible)      │                                  │
+│   └──────────────────┘                                  │
+│                                                         │
+│   Accès depuis PC Windows :                             │
+│   http://192.168.56.102  → web1                         │
+│   http://192.168.56.101  → web2                         │
+└─────────────────────────────────────────────────────────┘
+```
 
-| Membre | Rôle | Tâches principales |
-| :--- | :--- | :--- |
-| **Abdellah YEOUSSOMMASS** | **Lead DevOps** | Initialisation du projet Git, configuration de l'inventaire et synchronisation GitHub. |
-| **Miguel ZDIDIDU** | **Administrateur Système** | Configuration de la VM cible, gestion de la connectivité SSH et des accès privilégiés (sudo). |
-| **Chaimae MOUSSALY** | **Ingénieur Automatisation** | Développement du Playbook Ansible (`install_apache.yml`) et gestion du Rolling Deployment. |
-| **Moncef ESSAKEN** | **Développeur Web & QA** | Création de la page web, design CSS, correction de l'encodage UTF-8 et tests finaux. |
-
----
-
-## 3- Documentation des Étapes de Réalisation
-
-Le projet a été mené à bien en suivant ces étapes détaillées :
-
-### 3-1. Préparation de l'Infrastructure
-- Création du répertoire de travail et initialisation de Git.
-- Configuration du fichier `inventory.ini` avec l'adresse IP de la machine cible (`10.0.2.15`).
-- Validation de la communication entre le nœud maître et le nœud géré via la commande `ansible ping`.
-
-### 3-2. Développement du Playbook
-- Rédaction des tâches pour l'installation du paquet `apache2`.
-- Utilisation de la directive `become: yes` pour obtenir les droits root nécessaires à l'installation.
-- Configuration du service pour qu'il soit démarré et activé au boot.
-
-### 3-3. Création et Déploiement du Contenu
-- Conception d'une page web esthétique avec CSS intégré.
-- **Correction des accents** : Utilisation de `<meta charset="UTF-8">` pour assurer un affichage parfait des caractères spéciaux.
-- Automatisation du transfert du fichier vers `/var/www/html/` via le module `copy`.
-
-### 3-4. Rolling Deployment & Finalisation
-- Ajout de `serial: 1` dans le playbook pour simuler une mise à jour progressive.
-- Versionnage final du code et export du projet vers le dépôt distant GitHub.
+| Machine      | IP Interne  | IP Host-Only      | Rôle        |
+|--------------|-------------|-------------------|-------------|
+| Contrôleur   | 10.0.0.3    | —                 | Ansible     |
+| web1         | 10.0.0.1    | 192.168.56.102    | Apache      |
+| web2         | 10.0.0.2    | 192.168.56.101    | Apache      |
 
 ---
 
-## 4-Guide d'Utilisation
+## 📂 Structure du projet
 
-Pour déployer la solution sur votre propre infrastructure :
+```
+ansible-complet/
+│
+├── hosts                          ← Inventaire (liste des serveurs)
+├── ansible.cfg                    ← Configuration Ansible
+├── deploy.yml                     ← Playbook Rolling Deployment
+├── rollback.yml                   ← Playbook Rollback
+│
+├── group_vars/
+│   ├── all.yml                    ← Variables pour toutes les machines
+│   └── webservers.yml             ← Variables pour le groupe webservers
+│
+├── host_vars/
+│   ├── web1.yml                   ← Variables spécifiques web1
+│   └── web2.yml                   ← Variables spécifiques web2
+│
+└── roles/
+    └── apache/
+        ├── tasks/main.yml         ← Tâches d'installation Apache
+        ├── handlers/main.yml      ← Handler redémarrage Apache
+        ├── templates/index.html.j2← Page web (Jinja2)
+        └── vars/main.yml          ← Variables du role
+```
 
-1. Assurez-vous d'avoir Ansible installé.
-2. Clonez ce dépôt.
-3. Exécutez le playbook avec la commande suivante :
-   ```bash
-   ansible-playbook -i inventory.ini install_apache.yml -K
+---
+
+## 🚀 Lancer le déploiement
+
+```bash
+# Test de connexion
+ansible all -m ping
+
+# Déploiement complet (Rolling)
+ansible-playbook deploy.yml
+
+# En cas de problème : rollback
+ansible-playbook rollback.yml
+```
+
+---
+
+## 🔁 Rolling Deployment
+
+Le fichier `deploy.yml` utilise `serial: 1` :
+- web1 mis à jour → vérifié ✅ → web2 mis à jour
+- Si web1 échoue → web2 reste disponible ✅
+- Zéro interruption de service ✅
+
+---
+
+## 🌐 Voir les pages web
+
+Ouvrir dans le navigateur sur ton PC Windows :
+
+```
+http://192.168.56.102   → page web1 (thème bleu)
+http://192.168.56.101   → page web2 (thème violet)
+```
+
+---
+
+## 📦 Git
+
+```bash
+git init
+git add .
+git commit -m "Initial commit - Ansible Apache Rolling Deployment"
+git remote add origin https://github.com/TON_USERNAME/ansible-projet.git
+git push -u origin main
+```

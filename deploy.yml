@@ -1,0 +1,14 @@
+---
+# ============================================================
+#  PLAYBOOK PRINCIPAL — Rolling Deployment Apache
+#  Commande : ansible-playbook deploy.yml
+#  serial: 1 = une machine à la fois (rolling deployment)
+# ============================================================
+
+- name: "Rolling Deployment — Installation Apache et déploiement site web"
+  hosts: webservers
+  become: yes
+  serial: 1          # ← ROLLING DEPLOYMENT : 1 machine à la fois
+
+  roles:
+    - apache

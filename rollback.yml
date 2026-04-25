@@ -1,0 +1,47 @@
+---
+# ============================================================
+#  PLAYBOOK ROLLBACK
+#  En cas de problème : restaure la page web précédente
+#  Commande : ansible-playbook rollback.yml
+# ============================================================
+
+- name: "Rollback — Restauration page web précédente"
+  hosts: webservers
+  become: yes
+  serial: 1
+
+  tasks:
+
+    - name: Vérifier si backup existe
+      stat:
+        path: /var/www/html/index.html.bak
+      register: backup_exists
+
+    - name: Restaurer la page précédente depuis le backup
+      copy:
+        src: /var/www/html/index.html.bak
+        dest: /var/www/html/index.html
+        remote_src: yes
+      when: backup_exists.stat.exists
+
+    - name: Page de secours si pas de backup
+      copy:
+        dest: /var/www/html/index.html
+        content: |
+          <html>
+          <body style="font-family:sans-serif;text-align:center;padding:50px;background:#1a1a2e;color:white">
+          <h1>⚠️ Rollback effectué</h1>
+          <p>Serveur : {{ inventory_hostname }}</p>
+          <p>Aucun backup disponible — page de secours affichée.</p>
+          </body>
+          </html>
+      when: not backup_exists.stat.exists
+
+    - name: Redémarrer Apache
+      service:
+        name: apache2
+        state: restarted
+
+    - name: Confirmation rollback
+      debug:
+        msg: "🔄 Rollback effectué sur {{ inventory_hostname }}"
